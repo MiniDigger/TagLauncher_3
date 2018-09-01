@@ -62,7 +62,7 @@ import taglauncher_3.Launcher_Settings;
 public class Launcher_Main_Controller implements Initializable {
 
     private static Stage applicationOptionStage;
-    ArrayList<String> backgroundList = new ArrayList<String>();
+    ArrayList<String> backgroundList = new ArrayList<>();
 
     private double xOffset = 0;
     private double yOffset = 0;
@@ -110,8 +110,8 @@ public class Launcher_Main_Controller implements Initializable {
         setTextBoxMax();
         runBackground();
 
-        new Thread(() -> loadPlayerAvatar()).start(); //#LOVE YOU JAVA 8
-        new Thread(() -> checkLatestVersion()).start();
+        new Thread(this::loadPlayerAvatar).start();
+        new Thread(this::checkLatestVersion).start();
         tagapi_3.API_Interface API = new tagapi_3.API_Interface();
 
         username.setText(Launcher_Settings.playerUsername);
@@ -174,7 +174,7 @@ public class Launcher_Main_Controller implements Initializable {
         launch.setDisable(true);
         version.setDisable(true);
         username.setDisable(true);
-        new Thread(() -> loadPlayerAvatar()).start();
+        new Thread(this::loadPlayerAvatar).start();
 
         tagapi_3.API_Interface API = new tagapi_3.API_Interface();
 
@@ -182,11 +182,11 @@ public class Launcher_Main_Controller implements Initializable {
         executor.submit(() -> {
             //add server
             List ip = new ArrayList(API.getServersIPList());
-            if (!ip.contains(Launcher_Settings.serverIP) || ip.isEmpty()) {
+            if (ip.isEmpty() || !ip.contains(Launcher_Settings.serverIP)) {
                 API.addServerToServersDat(Launcher_Settings.serverName, Launcher_Settings.serverIP);
             }
 
-            API.downloadProfile((String) username.getText());
+            API.downloadProfile(username.getText());
             API.syncVersions();
 
             if (!Launcher_Settings.fastStartUp) { //NOT faststartup
@@ -224,25 +224,17 @@ public class Launcher_Main_Controller implements Initializable {
         Thread t = new Thread(() -> {
             while (true) {
                 try {
-                    if (Launcher_Settings.showDebugStatus == true) {
-                        Platform.runLater(() -> {
-                            launcherStatus.setText(API.getLog());
-                        });
+                    if (Launcher_Settings.showDebugStatus) {
+                        Platform.runLater(() -> launcherStatus.setText(API.getLog()));
                     } else {
                         if (API.getLog().startsWith("[dl] DOWNLOADING...")) {
-                            Platform.runLater(() -> {
-                                launcherStatus.setText("Status: Checking installed " + Launcher_Settings.playerVersion + " files.");
-                            });
+                            Platform.runLater(() -> launcherStatus.setText("Status: Checking installed " + Launcher_Settings.playerVersion + " files."));
                         }
                         if (API.getLog().startsWith("[rl] KEY:")) {
-                            Platform.runLater(() -> {
-                                launcherStatus.setText("Status: Preparing to start Minecraft.");
-                            });
+                            Platform.runLater(() -> launcherStatus.setText("Status: Preparing to start Minecraft."));
                         }
                         if (API.getLog().startsWith("[rl] Starting")) {
-                            Platform.runLater(() -> {
-                                launcherStatus.setText("Status: Starting Minecraft " + Launcher_Settings.playerVersion + ".");
-                            });
+                            Platform.runLater(() -> launcherStatus.setText("Status: Starting Minecraft " + Launcher_Settings.playerVersion + "."));
                         }
                     }
 
@@ -253,14 +245,12 @@ public class Launcher_Main_Controller implements Initializable {
                         Launcher_Settings.playerVersion = version.getValue().toString();
                         Launcher_Settings.userSettingsSave();
 
-                        if (Launcher_Settings.keepLauncherOpen == false) {
-                            Platform.runLater(() -> {
-                                launcherStatus.setText("Status: Minecraft started, now closing launcher. Have fun!");
-                            });
+                        if (!Launcher_Settings.keepLauncherOpen) {
+                            Platform.runLater(() -> launcherStatus.setText("Status: Minecraft started, now closing launcher. Have fun!"));
                             API.dumpLogs();
                             System.exit(0);
                         } else {
-                            new Thread(() -> checkLatestVersion()).start();
+                            new Thread(this::checkLatestVersion).start();
                         }
                         return;
 
@@ -270,7 +260,7 @@ public class Launcher_Main_Controller implements Initializable {
                             launcherStatus.setText("Status: Error. Minecraft file corruption detected!");
                             Alert alert = new Alert(AlertType.ERROR);
                             alert.setTitle("Minecraft Launcher - Error");
-                            alert.setHeaderText("Version: " + (String) version.getValue() + " failed to initialize!");
+                            alert.setHeaderText("Version: " + version.getValue() + " failed to initialize!");
                             alert.setContentText("The game failed to initialize as data corruption \nwas found! Press re-Download game with \n*Force Download* checked in the options menu.");
                             alert.initStyle(StageStyle.UTILITY);
                             DialogPane dialogPane = alert.getDialogPane();
@@ -313,7 +303,7 @@ public class Launcher_Main_Controller implements Initializable {
     private void launchOptions(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/taglauncher_3/gui/options/Launcher_Options_GUI.fxml"));
-            Parent optionsGUI = (Parent) fxmlLoader.load();
+            Parent optionsGUI = fxmlLoader.load();
             Stage stage = new Stage();
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.initStyle(StageStyle.UNDECORATED);
@@ -416,14 +406,10 @@ public class Launcher_Main_Controller implements Initializable {
         int randomBG = ThreadLocalRandom.current().nextInt(0, backgroundList.size());
         mainBackground.setStyle("-fx-background-image: url('/taglauncher_3/css/images/" + backgroundList.get(randomBG) + ".jpg')");
 
-        Timeline rotateBackground = new Timeline(new KeyFrame(Duration.seconds(10), new EventHandler<ActionEvent>() {
+        Timeline rotateBackground = new Timeline(new KeyFrame(Duration.seconds(10), event -> {
+            int randomBG1 = ThreadLocalRandom.current().nextInt(0, backgroundList.size());
 
-            @Override
-            public void handle(ActionEvent event) {
-                int randomBG = ThreadLocalRandom.current().nextInt(0, backgroundList.size());
-
-                mainBackground.setStyle("-fx-background-image: url('/taglauncher_3/css/images/" + backgroundList.get(randomBG) + ".jpg')");
-            }
+            mainBackground.setStyle("-fx-background-image: url('/taglauncher_3/css/images/" + backgroundList.get(randomBG1) + ".jpg')");
         }));
         rotateBackground.setCycleCount(Timeline.INDEFINITE);
         rotateBackground.play();
@@ -440,39 +426,25 @@ public class Launcher_Main_Controller implements Initializable {
 
             while ((line = in.readLine()) != null) {
                 if (Launcher_Settings.launcherVersion.equals(line)) {
-                    Platform.runLater(() -> {
-                        launcherStatus.setText("Status: Your launcher is up to date!");
-                    });
+                    Platform.runLater(() -> launcherStatus.setText("Status: Your launcher is up to date!"));
                 } else {
-                    Platform.runLater(() -> {
-                        launcherStatus.setText("Status: Your launcher is outdated! Please update it.");
-                    });
+                    Platform.runLater(() -> launcherStatus.setText("Status: Your launcher is outdated! Please update it."));
                 }
             }
             in.close();
 
-        } catch (MalformedURLException e) {
-            Platform.runLater(() -> {
-                launcherStatus.setText("Status: Unable to check for latest version!");
-            });
         } catch (IOException e) {
-            Platform.runLater(() -> {
-                launcherStatus.setText("Status: Unable to check for latest version!");
-            });
+            Platform.runLater(() -> launcherStatus.setText("Status: Unable to check for latest version!"));
 
         }
     }
 
     private void setTextBoxMax() {
-        username.lengthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    if (username.getText().length() > 16) {
-                        username.setText(username.getText().substring(0, 16));
-                        //Toolkit.getDefaultToolkit().beep();
-                    }
+        username.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > oldValue.intValue()) {
+                if (username.getText().length() > 16) {
+                    username.setText(username.getText().substring(0, 16));
+                    //Toolkit.getDefaultToolkit().beep();
                 }
             }
         });

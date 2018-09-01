@@ -84,7 +84,7 @@ public class Launcher_Options_Controller implements Initializable {
     @FXML
     private TextField optionsJVMArgumentsInput;
 
-    Hashtable<String, String> VersionHashTable = new Hashtable<String, String>();
+    Hashtable<String, String> VersionHashTable = new Hashtable<>();
     @FXML
     private Label optionStatus;
     @FXML
@@ -149,40 +149,35 @@ public class Launcher_Options_Controller implements Initializable {
         executor1.shutdown();
 
         ExecutorService executor = Executors.newCachedThreadPool();
-        executor.submit(new Callable<Object>() {
-            @Override
-            public Object call() throws Exception {
-                optionStatus.setText("Status: Getting latest versions");
-                optionsSelectVersion.setDisable(true);
-                optionsSelectVersionInstall.setDisable(true);
-                API.downloadVersionManifest();
+        executor.submit(() -> {
+            optionStatus.setText("Status: Getting latest versions");
+            optionsSelectVersion.setDisable(true);
+            optionsSelectVersionInstall.setDisable(true);
+            API.downloadVersionManifest();
 
-                for (Object ob : API.getInstallableVersionsList()) {
-                    String[] prsntAry = ob.toString().split(" % ");
-                    optionsSelectVersion.getItems().addAll(prsntAry[0]);
-                    VersionHashTable.put(prsntAry[0], prsntAry[1]);
+            for (Object ob : API.getInstallableVersionsList()) {
+                String[] prsntAry = ob.toString().split(" % ");
+                optionsSelectVersion.getItems().addAll(prsntAry[0]);
+                VersionHashTable.put(prsntAry[0], prsntAry[1]);
 
-                }
-                if (!API.getInstalledVersionsList().isEmpty()) {
-
-                    for (Object ob_ : API.getInstalledVersionsList()) {
-                        if (!VersionHashTable.containsKey((String) ob_)) {
-                            optionsSelectVersion.getItems().addAll(ob_);
-                            VersionHashTable.put((String) ob_, "Unknown");
-                        }
-                    }
-
-                }
-                optionsSelectVersion.setDisable(false);
-                optionsSelectVersionInstall.setDisable(false);
-                try {
-                    Platform.runLater(() -> {
-                        optionStatus.setText("Status: Idle");
-                    });
-                } catch (Exception e) {
-                }
-                return null;
             }
+            if (!API.getInstalledVersionsList().isEmpty()) {
+
+                for (Object ob_ : API.getInstalledVersionsList()) {
+                    if (!VersionHashTable.containsKey(ob_)) {
+                        optionsSelectVersion.getItems().addAll(ob_);
+                        VersionHashTable.put((String) ob_, "Unknown");
+                    }
+                }
+
+            }
+            optionsSelectVersion.setDisable(false);
+            optionsSelectVersionInstall.setDisable(false);
+            try {
+                Platform.runLater(() -> optionStatus.setText("Status: Idle"));
+            } catch (Exception e) {
+            }
+            return null;
         });
         executor.shutdown();
     }
@@ -250,11 +245,7 @@ public class Launcher_Options_Controller implements Initializable {
 
     @FXML
     private void _optionsKeepLauncherOpen(ActionEvent event) {
-        if (optionsKeepLauncherOpen.isSelected()) {
-            Launcher_Settings.keepLauncherOpen = true;
-        } else {
-            Launcher_Settings.keepLauncherOpen = false;
-        }
+        Launcher_Settings.keepLauncherOpen = optionsKeepLauncherOpen.isSelected();
 
     }
 
@@ -283,7 +274,7 @@ public class Launcher_Options_Controller implements Initializable {
             alert.show();
             return;
         }
-        
+
         optionsSelectVersionInstall.setDisable(true);
         optionsExit.setDisable(true);
         optionsClose.setDisable(true);
@@ -309,7 +300,7 @@ public class Launcher_Options_Controller implements Initializable {
 
                     Platform.runLater(() -> {
 
-                        if (Launcher_Settings.showDebugStatus == true) {
+                        if (Launcher_Settings.showDebugStatus) {
                             optionStatus.setText(API.getLog());
                         } else {
                             if (API.getLog().startsWith("[dl] URL: https://launchermeta")) {
@@ -342,7 +333,7 @@ public class Launcher_Options_Controller implements Initializable {
                             alert.initStyle(StageStyle.UTILITY);
                             DialogPane dialogPane = alert.getDialogPane();
                             dialogPane.getStylesheets().add("taglauncher_3/css/purple.css");
-                            alert.setContentText("Version: " + (String) optionsSelectVersion.getValue() + " has been downloaded & installed!");
+                            alert.setContentText("Version: " + optionsSelectVersion.getValue() + " has been downloaded & installed!");
                             ;
                             optionStatus.setText("Status: " + Launcher_Settings.Status.IDLE);
                             optionsSelectVersionInstall.setDisable(false);
@@ -372,11 +363,7 @@ public class Launcher_Options_Controller implements Initializable {
 
     @FXML
     private void _optionsDebugMode(ActionEvent event) {
-        if (Launcher_Settings.showDebugStatus == true) {
-            Launcher_Settings.showDebugStatus = false;
-        } else {
-            Launcher_Settings.showDebugStatus = true;
-        }
+        Launcher_Settings.showDebugStatus = !Launcher_Settings.showDebugStatus;
 
     }
 
@@ -418,18 +405,18 @@ public class Launcher_Options_Controller implements Initializable {
             optionsRamAllocationMax.setDisable(false);
         }
 
-        if (Launcher_Settings.fastStartUp == true) {
+        if (Launcher_Settings.fastStartUp) {
             optionsSelectFastStart.setSelected(true);
         }
-        
-        if (Launcher_Settings.bypassBlacklist == true) {
+
+        if (Launcher_Settings.bypassBlacklist) {
             optionsBypassBlacklist.setSelected(true);
         }
-        
-        if (Launcher_Settings.showDebugStatus == true) {
+
+        if (Launcher_Settings.showDebugStatus) {
             optionsDebugMode.setSelected(true);
         }
-        
+
         optionsJavaVersionInput.setText(Launcher_Settings.javaPath);
         if (!Launcher_Settings.javaPath.equals("")) {
             optionsJavaVersion.setSelected(true);
@@ -448,10 +435,10 @@ public class Launcher_Options_Controller implements Initializable {
             themeType.setValue(capitalize(Launcher_Settings.selectedTheme));
         }
 
-        if (Launcher_Settings.keepLauncherOpen == true) {
+        if (Launcher_Settings.keepLauncherOpen) {
             optionsKeepLauncherOpen.setSelected(true);
         }
-        
+
     }
 
     @FXML
@@ -560,7 +547,7 @@ public class Launcher_Options_Controller implements Initializable {
                 + "Should only be used if you're using vanilla minecraft or the mod doesn't need to download third party API/Files.\n"
         );
         tt_fastStartup.setGraphic(new ImageView(infoIMG));
-        
+
         tt_bypassBlacklist.setText(
                 ""
                 + "Bypass The Blacklist\n"
@@ -613,7 +600,7 @@ public class Launcher_Options_Controller implements Initializable {
                 + "Click to view the launcher credits.\n"
         );
         tt_launcherVersion.setGraphic(new ImageView(infoIMG));
-        
+
         tt_debugMode.setText(
                 ""
                 + "Debug Mode\n"
@@ -643,54 +630,38 @@ public class Launcher_Options_Controller implements Initializable {
     }
 
     private void setTextBoxMax() {
-        optionsResolutionMin.lengthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    if (optionsResolutionMin.getText().length() > 4) {
-                        optionsResolutionMin.setText(optionsResolutionMin.getText().substring(0, 4));
-                        //Toolkit.getDefaultToolkit().beep();
-                    }
+        optionsResolutionMin.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > oldValue.intValue()) {
+                if (optionsResolutionMin.getText().length() > 4) {
+                    optionsResolutionMin.setText(optionsResolutionMin.getText().substring(0, 4));
+                    //Toolkit.getDefaultToolkit().beep();
                 }
             }
         });
 
-        optionsResolutionMax.lengthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    if (optionsResolutionMax.getText().length() > 4) {
-                        optionsResolutionMax.setText(optionsResolutionMax.getText().substring(0, 4));
-                        //Toolkit.getDefaultToolkit().beep();
-                    }
+        optionsResolutionMax.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > oldValue.intValue()) {
+                if (optionsResolutionMax.getText().length() > 4) {
+                    optionsResolutionMax.setText(optionsResolutionMax.getText().substring(0, 4));
+                    //Toolkit.getDefaultToolkit().beep();
                 }
             }
         });
 
-        optionsRamAllocationMin.lengthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    if (optionsRamAllocationMin.getText().length() > 4) {
-                        optionsRamAllocationMin.setText(optionsRamAllocationMin.getText().substring(0, 4));
-                        //Toolkit.getDefaultToolkit().beep();
-                    }
+        optionsRamAllocationMin.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > oldValue.intValue()) {
+                if (optionsRamAllocationMin.getText().length() > 4) {
+                    optionsRamAllocationMin.setText(optionsRamAllocationMin.getText().substring(0, 4));
+                    //Toolkit.getDefaultToolkit().beep();
                 }
             }
         });
 
-        optionsRamAllocationMax.lengthProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                    Number oldValue, Number newValue) {
-                if (newValue.intValue() > oldValue.intValue()) {
-                    if (optionsRamAllocationMax.getText().length() > 4) {
-                        optionsRamAllocationMax.setText(optionsRamAllocationMax.getText().substring(0, 4));
-                        //Toolkit.getDefaultToolkit().beep();
-                    }
+        optionsRamAllocationMax.lengthProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.intValue() > oldValue.intValue()) {
+                if (optionsRamAllocationMax.getText().length() > 4) {
+                    optionsRamAllocationMax.setText(optionsRamAllocationMax.getText().substring(0, 4));
+                    //Toolkit.getDefaultToolkit().beep();
                 }
             }
         });
@@ -717,13 +688,8 @@ public class Launcher_Options_Controller implements Initializable {
     }
 
     @FXML
-    private void _optionsSelectFastStart(ActionEvent event) 
+    private void _optionsSelectFastStart(ActionEvent event)
     {
-        if (Launcher_Settings.fastStartUp == true) {
-            Launcher_Settings.fastStartUp = false;
-        } else {
-            Launcher_Settings.fastStartUp = true;
-        }
-
+        Launcher_Settings.fastStartUp = !Launcher_Settings.fastStartUp;
     }
 }
