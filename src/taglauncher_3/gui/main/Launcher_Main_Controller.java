@@ -8,29 +8,21 @@ package taglauncher_3.gui.main;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
-import java.util.Timer;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -56,7 +48,6 @@ import taglauncher_3.Launcher_Main;
 import taglauncher_3.Launcher_Settings;
 
 /**
- *
  * @author ammar
  */
 public class Launcher_Main_Controller implements Initializable {
@@ -125,33 +116,31 @@ public class Launcher_Main_Controller implements Initializable {
                 version.setValue(Launcher_Settings.playerVersion);
             }
         }
-        
-        if (Launcher_Settings.firstStart)
-        {
+
+        if (Launcher_Settings.firstStart) {
             showFirstTimeMessage();
             Launcher_Settings.firstStart = false;
             Launcher_Settings.userSettingsSave();
         }
     }
 
-    public void showFirstTimeMessage()
-    {
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Minecraft Launcher - Welcome");
-            alert.setHeaderText("Greetings Player...");
-            alert.setContentText(""
-                    + "It looks like this is your first time using our launcher and we wanted to provide you with some help.\n\n"
-                    + "By default, the launcher doesn't come with any versions of Minecraft installed so you will need to download the version you wish to play via the options menu.\n\n"
-                    + "Once in the options menu, click the dropdown menu under the Version Settings title and choose the version you want. When you have chosen, click the download button and wait for the launcher to download all the necessary files.");
-            alert.initStyle(StageStyle.UTILITY);
-            DialogPane dialogPane = alert.getDialogPane();
-            dialogPane.getStylesheets().add("taglauncher_3/css/purple.css");
-            Stage stage = (Stage) dialogPane.getScene().getWindow();
-            stage.setAlwaysOnTop(true);
-            stage.toFront();
-            alert.show();
+    public void showFirstTimeMessage() {
+        Alert alert = new Alert(AlertType.INFORMATION);
+        alert.setTitle("Minecraft Launcher - Welcome");
+        alert.setHeaderText("Greetings Player...");
+        alert.setContentText(""
+                + "It looks like this is your first time using our launcher and we wanted to provide you with some help.\n\n"
+                + "By default, the launcher doesn't come with any versions of Minecraft installed so you will need to download the version you wish to play via the options menu.\n\n"
+                + "Once in the options menu, click the dropdown menu under the Version Settings title and choose the version you want. When you have chosen, click the download button and wait for the launcher to download all the necessary files.");
+        alert.initStyle(StageStyle.UTILITY);
+        DialogPane dialogPane = alert.getDialogPane();
+        dialogPane.getStylesheets().add("taglauncher_3/css/purple.css");
+        Stage stage = (Stage) dialogPane.getScene().getWindow();
+        stage.setAlwaysOnTop(true);
+        stage.toFront();
+        alert.show();
     }
-    
+
     @FXML
     private void launchMineCraft(ActionEvent event) {
         if (username.getText().equals("")) {
@@ -197,7 +186,7 @@ public class Launcher_Main_Controller implements Initializable {
             API.setMemory(Integer.parseInt(Launcher_Settings.ramAllocationMax));
             API.setHeight(Integer.parseInt(Launcher_Settings.resolutionHeight));
             API.setWidth(Integer.parseInt(Launcher_Settings.resolutionWidth));
-            
+
             if (!Launcher_Settings.javaPath.equals("")) {
                 API.setJavaPath(Launcher_Settings.javaPath);
             }
@@ -209,7 +198,7 @@ public class Launcher_Main_Controller implements Initializable {
             } else {
                 API.setVersionData("#AmmarBless");
             }
-            
+
             Boolean nettyPatch = Launcher_Settings.bypassBlacklist;
             if (Launcher_Settings.fastStartUp) {
                 API.runMinecraft(username.getText(), (String) version.getValue(), false, nettyPatch);
@@ -362,29 +351,29 @@ public class Launcher_Main_Controller implements Initializable {
 
         tt_username.setText(
                 ""
-                + "Your Username\n"
-                + "The name must be between 4 and 16 characters long and can only contain letters, numbers and underscores.\n"
+                        + "Your Username\n"
+                        + "The name must be between 4 and 16 characters long and can only contain letters, numbers and underscores.\n"
         );
         tt_username.setGraphic(new ImageView(infoIMG));
 
         tt_version.setText(
                 ""
-                + "Minecraft Version\n"
-                + "Select what version of minecraft you wish to play.\n"
-                + "You can download new versions via the options menu.\n"
+                        + "Minecraft Version\n"
+                        + "Select what version of minecraft you wish to play.\n"
+                        + "You can download new versions via the options menu.\n"
         );
         tt_version.setGraphic(new ImageView(infoIMG));
 
         tt_options.setText(
                 ""
-                + "The Options Menu\n"
-                + "A menu that allows you to tweak various settings for the launcher and Minecraft.\n"
+                        + "The Options Menu\n"
+                        + "A menu that allows you to tweak various settings for the launcher and Minecraft.\n"
         );
         tt_options.setGraphic(new ImageView(infoIMG));
         tt_play.setText(
                 ""
-                + "Play Minecraft\n"
-                + "Launches Minecraft with the version and settings you have chosen.\n"
+                        + "Play Minecraft\n"
+                        + "Launches Minecraft with the version and settings you have chosen.\n"
         );
         tt_play.setGraphic(new ImageView(infoIMG));
     }

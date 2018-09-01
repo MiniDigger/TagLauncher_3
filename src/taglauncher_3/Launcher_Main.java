@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- *
  * @author ammar
  */
 public class Launcher_Main extends Application {
@@ -29,17 +28,17 @@ public class Launcher_Main extends Application {
     static public Stage getApplicationMainStage() {
         return Launcher_Main.applicationMainStage;
     }
-    
+
     public static void main(String[] args) {
         launch(args);
     }
-   
+
     @Override
     public void start(Stage stage) throws Exception {
         Launcher_Settings.userSettingsLoad();
-        
+
         //Launcher_Main_Background.setBackgroundImages();
-        
+
         Parent root = FXMLLoader.load(getClass().getResource("gui/main/Launcher_Main_GUI.fxml"));
         Scene scene = new Scene(root);
         initApplicationSettings(stage, scene);
@@ -48,27 +47,26 @@ public class Launcher_Main extends Application {
         stage.show();
     }
 
-    public void initApplicationSettings(Stage stage, Scene scene)
-    {
+    public void initApplicationSettings(Stage stage, Scene scene) {
         setApplicationMainStage(stage);
-        
-        stage.getIcons().add(new Image(Launcher_Main.class.getResourceAsStream("/taglauncher_3/css/images/app_icon_1.png" )));
+
+        stage.getIcons().add(new Image(Launcher_Main.class.getResourceAsStream("/taglauncher_3/css/images/app_icon_1.png")));
         stage.setTitle("Minecraft Launcher");
         stage.initStyle(StageStyle.UNDECORATED);
         stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setMinWidth(450);        
+        stage.setMinWidth(450);
         stage.setMinHeight(450);
-        stage.setMaxWidth(450);        
+        stage.setMaxWidth(450);
         stage.setMaxHeight(450);
         stage.setResizable(false);
-        Launcher_Settings.setTheme(scene); 
-        
+        Launcher_Settings.setTheme(scene);
+
 
         scene.setOnMousePressed(event -> {
             xOffset = stage.getX() - event.getScreenX();
             yOffset = stage.getY() - event.getScreenY();
         });
-        
+
         scene.setOnMouseDragged(event -> {
             stage.setX(event.getScreenX() + xOffset);
             stage.setY(event.getScreenY() + yOffset);

@@ -5,18 +5,15 @@
  */
 package taglauncher_3.gui.options;
 
-import java.awt.Toolkit;
+import java.awt.*;
 import java.io.File;
-import taglauncher_3.gui.main.Launcher_Main_Controller;
 import java.net.URL;
 import java.util.Hashtable;
 import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -34,11 +31,11 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import taglauncher_3.Launcher_Main;
 import taglauncher_3.Launcher_Settings;
+import taglauncher_3.gui.main.Launcher_Main_Controller;
 
 /**
  * FXML Controller class
@@ -513,98 +510,98 @@ public class Launcher_Options_Controller implements Initializable {
 
         tt_keepLauncherOpen.setText(
                 ""
-                + "Keep The Launcher Open\n"
-                + "Keeps the launcher open after Minecraft has started.\n"
+                        + "Keep The Launcher Open\n"
+                        + "Keeps the launcher open after Minecraft has started.\n"
         );
         tt_keepLauncherOpen.setGraphic(new ImageView(infoIMG));
 
         tt_customTheme.setText(
                 ""
-                + "Choose A Custom Theme\n"
-                + "Change the launchers theme to a diffrent color.\n"
+                        + "Choose A Custom Theme\n"
+                        + "Change the launchers theme to a diffrent color.\n"
         );
         tt_customTheme.setGraphic(new ImageView(infoIMG));
 
         tt_resolution.setText(
                 ""
-                + "Set Minecraft's Resolution\n"
-                + "Set the height and width of the Minecraft client.\n"
+                        + "Set Minecraft's Resolution\n"
+                        + "Set the height and width of the Minecraft client.\n"
         );
         tt_resolution.setGraphic(new ImageView(infoIMG));
 
         tt_ramAllocation.setText(
                 ""
-                + "Set Minecraft's Ram Usage\n"
-                + "Set the minimum and maximum ram that the Minecraft client will use.\n"
-                + "WARNING: It's best to leave this option alone unless you know what you're doing. Altering this beyond what your computer can handle will cause Minecraft to not open.\n"
+                        + "Set Minecraft's Ram Usage\n"
+                        + "Set the minimum and maximum ram that the Minecraft client will use.\n"
+                        + "WARNING: It's best to leave this option alone unless you know what you're doing. Altering this beyond what your computer can handle will cause Minecraft to not open.\n"
         );
         tt_ramAllocation.setGraphic(new ImageView(infoIMG));
 
         tt_fastStartup.setText(
                 ""
-                + "Fast Startup\n"
-                + "Lets you bypass the integrity check when launching Minecraft.\n"
-                + "Should only be used if you're using vanilla minecraft or the mod doesn't need to download third party API/Files.\n"
+                        + "Fast Startup\n"
+                        + "Lets you bypass the integrity check when launching Minecraft.\n"
+                        + "Should only be used if you're using vanilla minecraft or the mod doesn't need to download third party API/Files.\n"
         );
         tt_fastStartup.setGraphic(new ImageView(infoIMG));
 
         tt_bypassBlacklist.setText(
                 ""
-                + "Bypass The Blacklist\n"
-                + "Let you bypass the EULA blacklist when enabled.\n"
+                        + "Bypass The Blacklist\n"
+                        + "Let you bypass the EULA blacklist when enabled.\n"
         );
         tt_bypassBlacklist.setGraphic(new ImageView(infoIMG));
 
         tt_selectVersion.setText(
                 ""
-                + "Select A Version\n"
-                + "Choose a version of Minecraft to download and install.\n"
+                        + "Select A Version\n"
+                        + "Choose a version of Minecraft to download and install.\n"
         );
         tt_selectVersion.setGraphic(new ImageView(infoIMG));
 
         tt_selectVersionInstall.setText(
                 ""
-                + "Install and Download\n"
-                + "Install and download the version of Minecraft selected.\n"
+                        + "Install and Download\n"
+                        + "Install and download the version of Minecraft selected.\n"
         );
         tt_selectVersionInstall.setGraphic(new ImageView(infoIMG));
 
         tt_forceDownload.setText(
                 ""
-                + "Force Download\n"
-                + "When enabled, this tells the launcher to re-download all files for the selected version.\n"
-                + "This can fix issues with Minecraft not starting due to corruption or missing files.\n"
+                        + "Force Download\n"
+                        + "When enabled, this tells the launcher to re-download all files for the selected version.\n"
+                        + "This can fix issues with Minecraft not starting due to corruption or missing files.\n"
         );
         tt_forceDownload.setGraphic(new ImageView(infoIMG));
 
         tt_javaVersion.setText(
                 ""
-                + "Java Location\n"
-                + "When enabled, this changes the location of where the launcher gets Java from.\n"
-                + "WARNING: It's best to leave this option alone unless you know what you're doing. Altering this may cause Minecraft to not open.\n"
+                        + "Java Location\n"
+                        + "When enabled, this changes the location of where the launcher gets Java from.\n"
+                        + "WARNING: It's best to leave this option alone unless you know what you're doing. Altering this may cause Minecraft to not open.\n"
         );
         tt_javaVersion.setGraphic(new ImageView(infoIMG));
 
         tt_jvmArgs.setText(
                 ""
-                + "Extra JVM Arguments\n"
-                + "When enabled, this allows you to insert extra JVM arguments when Minecraft launches.\n"
-                + "WARNING: It's best to leave this option alone unless you know what you're doing. Altering this may cause Minecraft to not open.\n"
+                        + "Extra JVM Arguments\n"
+                        + "When enabled, this allows you to insert extra JVM arguments when Minecraft launches.\n"
+                        + "WARNING: It's best to leave this option alone unless you know what you're doing. Altering this may cause Minecraft to not open.\n"
         );
         tt_jvmArgs.setGraphic(new ImageView(infoIMG));
 
         tt_launcherVersion.setText(
                 ""
-                + "Current Launcher Version\n"
-                + "This is the current launcher version.\n"
-                + "Click to view the launcher credits.\n"
+                        + "Current Launcher Version\n"
+                        + "This is the current launcher version.\n"
+                        + "Click to view the launcher credits.\n"
         );
         tt_launcherVersion.setGraphic(new ImageView(infoIMG));
 
         tt_debugMode.setText(
                 ""
-                + "Debug Mode\n"
-                + "When enabled, this tells the launcher to output raw logs in the logger.\n"
+                        + "Debug Mode\n"
+                        + "When enabled, this tells the launcher to output raw logs in the logger.\n"
         );
         tt_debugMode.setGraphic(new ImageView(infoIMG));
     }
@@ -613,7 +610,7 @@ public class Launcher_Options_Controller implements Initializable {
     private void mc_launcherVersion(MouseEvent event) {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label)node).setMinHeight(Region.USE_PREF_SIZE));
+        alert.getDialogPane().getChildren().stream().filter(node -> node instanceof Label).forEach(node -> ((Label) node).setMinHeight(Region.USE_PREF_SIZE));
         alert.setTitle("Minecraft Launcher - Credits");
         alert.setHeaderText("So long, and thanks for all the fish.");
         alert.initStyle(StageStyle.UTILITY);
@@ -688,8 +685,7 @@ public class Launcher_Options_Controller implements Initializable {
     }
 
     @FXML
-    private void _optionsSelectFastStart(ActionEvent event)
-    {
+    private void _optionsSelectFastStart(ActionEvent event) {
         Launcher_Settings.fastStartUp = !Launcher_Settings.fastStartUp;
     }
 }
