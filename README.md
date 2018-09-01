@@ -1,4 +1,4 @@
-# The official TagCraftMC Open-source Minecraft Launcher - TagAPI
+# Some open source minecraft launcher, forked from the official TagCraftMC launcher
 The purpose of the launcher is to provide the users the ability to download, install and run Minecraft. The launcher uses TagAPI version 3.
 
 This repo is a fork by MiniDigger for his own needs. Its not affiliated with TagCraftMC.
