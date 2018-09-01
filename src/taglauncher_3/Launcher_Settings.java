@@ -19,9 +19,10 @@ import javafx.scene.Scene;
  */
 public class Launcher_Settings {
 
+    static public final String updateURL = "https://raw.githubusercontent.com/MiniDigger/TagLauncher_3/master/_html_/latestVersion";
     static public final String serverIP = "localhost";
     static public final String serverName = "Localhost";
-    static public String launcherVersion = "1.30";
+    static public String launcherVersion = "1.31";
     static public String playerUsername = "";
     static public String playerVersion = "-1";
     static public boolean firstStart = true;

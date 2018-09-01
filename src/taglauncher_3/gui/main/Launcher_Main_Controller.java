@@ -406,7 +406,7 @@ public class Launcher_Main_Controller implements Initializable {
 
     private void checkLatestVersion() {
         try {
-            URL versionLastesturl = new URL("https://raw.githubusercontent.com/ammarx/TagLauncher_3/master/_html_/latestVersion");
+            URL versionLastesturl = new URL(Launcher_Settings.updateURL);
             URLConnection con = versionLastesturl.openConnection();
             con.setUseCaches(false); //had to as it was caching it.
 
@@ -415,6 +415,7 @@ public class Launcher_Main_Controller implements Initializable {
 
             while ((line = in.readLine()) != null) {
                 if (Launcher_Settings.launcherVersion.equals(line)) {
+                    //TODO better update check, check semver
                     Platform.runLater(() -> launcherStatus.setText("Status: Your launcher is up to date!"));
                 } else {
                     Platform.runLater(() -> launcherStatus.setText("Status: Your launcher is outdated! Please update it."));
