@@ -196,7 +196,7 @@ public class Launcher_Main_Controller implements Initializable {
             if (!Launcher_Settings.playerUsername.equals("")) {
                 API.setVersionData("Hi " + Launcher_Settings.playerUsername + "!");
             } else {
-                API.setVersionData("#AmmarBless");
+                API.setVersionData("#MiniDigger is awesome");
             }
 
             Boolean nettyPatch = Launcher_Settings.bypassBlacklist;
